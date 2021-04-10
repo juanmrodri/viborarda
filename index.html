@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vibarda</title>
+    <style>
+        body {background: #666; text-align: center; margin: 60px 0 0 0;} 
+        canvas {border: solid  4px white; background: cornflowerblue; box-shadow: 3px 3px 10px rgb(84, 84, 84);}
+    </style>
+</head>
+<body>
+    <!-- el canvas hace posible mostrar graficos en HTML -->
+    <canvas width="500" height="500"></canvas>
+    <script>
+        // ancho y alto de mi canvas
+        const ANCHOALTO = 500;
+        // constantes de control
+        const PESO = 10;
+        // intervalo del loop
+        const INTERVALO = 80; // milisegundos
+        // configuraciones de direcciones
+        const DIRECCION = {
+            KeyA: [-1, 0],
+            KeyD: [1, 0],
+            KeyS: [0, 1],
+            KeyW: [0, -1],
+            ArrowUp: [0, -1],
+            ArrowDown: [0, 1],
+            ArrowLeft: [-1, 0],
+            ArrowRight: [1, 0]
+        }
+        let controles = {
+            direccion:{x:1, y:0},
+            bicho:[{x:25, y:25}],
+            victima: {x:0, y:250},
+            jugando: false // vamos a detectar si el juego esta corriento
+        } 
+        let teclaApretada;
+        // referencio el canvas en JS
+        let papel = document.querySelector("canvas");
+        // referencia al contexto de canvas
+        let ctx = papel.getContext("2d");
+        // creamos el loop
+        let looper = () => {
+            // referencio la cabeza del bicho
+            const sq = controles.bicho[0]; // acá llamamos a la "cabeza" de la serpiente
+            let atrapado = sq.x === controles.victima.x && sq.y === controles.victima.y; // aca si esto se cumple, guardamos un true
+            // referencio la direccion actual
+            let dx = controles.direccion.x;
+            let dy = controles.direccion.y;
+            // le sumo la direccion a su posicion
+            sq.x += dx;
+            sq.y += dy;
+
+            if(atrapado) {
+                revictima();
+            }
+            
+            // llamo a la animacion a dibujar
+            requestAnimationFrame(dibujar);
+            
+            // llamar a la funcion luedo de x intervalo
+            setTimeout(looper, INTERVALO);
+
+        }
+        document.onkeydown = (e) => {
+            // guardo en teclaApretada la nueva direccion
+            teclaApretada = DIRECCION[e.code];
+            // deconstruyo x y de teclaApretada
+            const [x, y] = teclaApretada; // lo que esta en la pos 0 se guardara en x e y
+            if(-x !== controles.direccion.x && -y !== controles.direccion.y) { // con esta simple linea logramos que no se pueda ir en la direccion opuesta a la que estamos yendo, porque la viborita no se puede pisar, entonces si ambas direcciones en negativo, son distintas a las direcciones, nos deja mover al bicho, sino, no pasa nada, ya que se entiende que queremos ir para "atras" y eso no se puede
+                // asigno las direcciones a mis controles
+                controles.direccion.x = x; // aca establecemos que la tecla apretada indicara la direccion final
+                controles.direccion.y = y; // aca establecemos que la tecla apretada indicara la direccion final
+            }
+            
+        };
+        let dibujar = () => {     
+            ctx.clearRect(0,0,ANCHOALTO,ANCHOALTO); // con esto cada vez que corre el loop, borramos todo lo que este en el canvas, desde las posiciones 0 y en los tamaños 500, es decir, la totalidad del canvas
+            // instacion cabeza de bicho
+            const sq = controles.bicho[0]; // con esto sabemos la posicion de la cabeza del bicho, para ubicarnos en el canvas, y para poder redibujar el cuadrado
+            const victima = controles.victima // no le paso posicion porque es un objeto que tiene 2 elementos
+            dibujarActores('green', sq.x, sq.y);
+            dibujarActores('white', victima.x, victima.y);
+        }
+
+        let dibujarActores = (color, x, y) => {
+            
+            // Indico cual sera el color de dibujo a crear
+            ctx.fillStyle = color;
+            // creo un cuadrado (posicionX, posicionY, Ancho, Alto)
+            ctx.fillRect(x*PESO, y*PESO, 10, 10); // aca en los 2 primeros argumentos, le pasamos las posiciones de looper
+        }
+
+        let cualquierLado = () => {
+            // con esto lo que hago es convertir a DIRECCION, en un array, y guardarlo en direccion, ya que sino, no podria acceder a los valores y en el random me tiraria error
+            let direccion = Object.values(DIRECCION);
+            return {
+                // esto va a ser un numero random entre 0 y 500
+                x: parseInt(Math.random()*ANCHOALTO/PESO), // aca lo dividimos por peso, ya que si lo dejamos como esta, cualquier numero que aparezca, sera multiplicado por peso, y nos daria posiciones por fuera del canvas
+                y: parseInt(Math.random()*ANCHOALTO/PESO),
+                d: direccion[parseInt(Math.random()*11/PESO)]
+            }
+        }
+        
+        let revictima = () => {
+            // reposiciona a la victima en otro lado
+            let nuevaPosicion = cualquierLado();
+            let victima = controles.victima; 
+            victima.x = nuevaPosicion.x;
+            victima.y = nuevaPosicion.y;
+        }
+        // cuando el documento carga, llamo a looper
+        window.onload = () => {
+            posiciones = cualquierLado();
+            let head = controles.bicho[0]; 
+            head.x = posiciones.x;
+            head.y = posiciones.y;
+            controles.direccion.x = posiciones.d[0]; // aca establecemos que la tecla apretada indicara la direccion final
+            controles.direccion.y = posiciones.d[1];
+            // posicion random de la victima
+            posicionVictima = cualquierLado();
+            let victima = controles.victima; 
+            victima.x = posicionVictima.x;
+            victima.y = posicionVictima.y;
+            looper();
+        }
+    </script>
+</body>
+</html>
