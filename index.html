@@ -57,6 +57,7 @@
             if(detectarChoque()){
                 // si existe este choque, detengo el juego y llamamamos a la funcion reiniciar
                 controles.jugando = false;
+                alert('Buen intento, tu puntaje fue: ' + controles.bicho.length);
                 reiniciarJuego();
             }
             // referencio la direccion actual
@@ -98,7 +99,6 @@
             if (controles.crecimiento > 0) {
                 // agrego a mi bicho el clon de cola creado anteriormente
                 controles.bicho.push(cola); // esto le agrega el objeto vacio con la copia de la cabeza
-                console.log(controles.bicho);
                 controles.crecimiento -= 1; // esto vuelve a 0 para que no siga creciendo
             }
             
@@ -189,7 +189,6 @@
                 jugando: false, // vamos a detectar si el juego esta corriento
                 crecimiento: 0 // esto va a chequear si tiene que crecer o no
             };
-            console.log('reiniciando')
             posiciones = cualquierLado();
             let head = controles.bicho[0]; 
             head.x = posiciones.x;
