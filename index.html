@@ -35,7 +35,8 @@
             direccion:{x:1, y:0},
             bicho:[{x:25, y:25}],
             victima: {x:0, y:250},
-            jugando: false // vamos a detectar si el juego esta corriento
+            jugando: false, // vamos a detectar si el juego esta corriento
+            crecimiento: 0 // esto va a chequear si tiene que crecer o no
         } 
         let teclaApretada;
         // referencio el canvas en JS
@@ -44,18 +45,48 @@
         let ctx = papel.getContext("2d");
         // creamos el loop
         let looper = () => {
-            // referencio la cabeza del bicho
-            const sq = controles.bicho[0]; // acá llamamos a la "cabeza" de la serpiente
+            // creamos un objeto que represente la cola
+            let cola = {};
+            Object.assign(cola, controles.bicho[controles.bicho.length-1]) // espera dos parametros, el primero es a donde quiero copiar lo que voy a copiar, el segundo es el elemento que vamos a copiar, es decir, el ultimo que existe, si recien arranca, es la cabeza
+            const sq = controles.bicho[0];
             let atrapado = sq.x === controles.victima.x && sq.y === controles.victima.y; // aca si esto se cumple, guardamos un true
+            if(detectarChoque()){
+                controles.jugando = false;
+                console.log(controles.jugando);
+            }
             // referencio la direccion actual
             let dx = controles.direccion.x;
             let dy = controles.direccion.y;
             // le sumo la direccion a su posicion
-            sq.x += dx;
-            sq.y += dy;
+            let tamanio = controles.bicho.length -1;
+            if(controles.jugando) {
+                //hacemos un for a la inversa
+                for(let idx = tamanio; idx > -1; idx--){
+                    // referencio la cabeza del bicho
+                    const sq = controles.bicho[idx]; // yo necesito aca saber la posicion del fragmento actual del bicho
+                    // esto lo que hace es asignarle al ultimo elemento, la posicion de su posicion anterior, y asi se van
+                    // "moviendo" siendo la cabeza el ultimo elemento que se mueve en realidad
+                    if (idx===0){
+                        sq.x += dx;
+                        sq.y += dy;
+                    } else {
+                        sq.x = controles.bicho[idx-1].x;
+                        sq.y = controles.bicho[idx-1].y;
+                    }
+                    
+                    }
+            }
+            
 
             if(atrapado) {
+                controles.crecimiento += 1; // aca sabemos que la cabeza va a crecer uno
                 revictima();
+            }
+
+            if (controles.crecimiento > 0) {
+                controles.bicho.push(cola); // esto le agrega el objeto vacio con la copia de la cabeza
+                console.log(controles.bicho);
+                controles.crecimiento -= 1; // esto vuelve a 0 para que no siga creciendo
             }
             
             // llamo a la animacion a dibujar
@@ -65,6 +96,14 @@
             setTimeout(looper, INTERVALO);
 
         }
+
+        let detectarChoque = () =>{
+            const head = controles.bicho[0];
+            if(head.x < 0 || head.x >= ANCHOALTO/PESO){
+                return true;
+            }
+        }
+
         document.onkeydown = (e) => {
             // guardo en teclaApretada la nueva direccion
             teclaApretada = DIRECCION[e.code];
@@ -80,9 +119,12 @@
         let dibujar = () => {     
             ctx.clearRect(0,0,ANCHOALTO,ANCHOALTO); // con esto cada vez que corre el loop, borramos todo lo que este en el canvas, desde las posiciones 0 y en los tamaños 500, es decir, la totalidad del canvas
             // instacion cabeza de bicho
-            const sq = controles.bicho[0]; // con esto sabemos la posicion de la cabeza del bicho, para ubicarnos en el canvas, y para poder redibujar el cuadrado
+            for (let idx=0; idx < controles.bicho.length; idx++){
+                const {x, y} = controles.bicho[idx];
+                dibujarActores('green', x, y);
+            }
+            // *ahora esto está en el for* const sq = controles.bicho[0]; // con esto sabemos la posicion de la cabeza del bicho, para ubicarnos en el canvas, y para poder redibujar el cuadrado
             const victima = controles.victima // no le paso posicion porque es un objeto que tiene 2 elementos
-            dibujarActores('green', sq.x, sq.y);
             dibujarActores('white', victima.x, victima.y);
         }
 
@@ -125,6 +167,7 @@
             let victima = controles.victima; 
             victima.x = posicionVictima.x;
             victima.y = posicionVictima.y;
+            controles.jugando = true;
             looper();
         }
     </script>
