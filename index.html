@@ -98,6 +98,7 @@
         }
 
         let detectarChoque = () =>{
+            // primero comprobamos que la cabeza no choque contra los bordes
             const head = controles.bicho[0];
             if(head.x < 0 || head.x >= ANCHOALTO/PESO){
                 return true;
