@@ -45,31 +45,41 @@
         let ctx = papel.getContext("2d");
         // creamos el loop
         let looper = () => {
-            // creamos un objeto que represente la cola
+            // creamos un objeto vacio que represente la cola
             let cola = {};
+            // clonar la ultima posicion de bicho en cola
             Object.assign(cola, controles.bicho[controles.bicho.length-1]) // espera dos parametros, el primero es a donde quiero copiar lo que voy a copiar, el segundo es el elemento que vamos a copiar, es decir, el ultimo que existe, si recien arranca, es la cabeza
+            // instancio la cabeza del bicho
             const sq = controles.bicho[0];
+            // verifico que bicho atrapo a la victima
             let atrapado = sq.x === controles.victima.x && sq.y === controles.victima.y; // aca si esto se cumple, guardamos un true
+            // detecto si en esta vuelta del loop, hay un choque
             if(detectarChoque()){
+                // si existe este choque, detengo el juego y llamamamos a la funcion reiniciar
                 controles.jugando = false;
-                console.log(controles.jugando);
+                reiniciarJuego();
             }
             // referencio la direccion actual
             let dx = controles.direccion.x;
             let dy = controles.direccion.y;
-            // le sumo la direccion a su posicion
+            // guardo el tamaño de mi bicho
             let tamanio = controles.bicho.length -1;
+            // pregunto si el juego corre
             if(controles.jugando) {
-                //hacemos un for a la inversa
+                //hacemos un for a la inversa, del bicho
                 for(let idx = tamanio; idx > -1; idx--){
                     // referencio la cabeza del bicho
                     const sq = controles.bicho[idx]; // yo necesito aca saber la posicion del fragmento actual del bicho
                     // esto lo que hace es asignarle al ultimo elemento, la posicion de su posicion anterior, y asi se van
                     // "moviendo" siendo la cabeza el ultimo elemento que se mueve en realidad
+                    // aca pregunto si esta es la cabeza
                     if (idx===0){
+                        // si es la cabeza, avanza a la nueva direccion
+                        // por eso el +=
                         sq.x += dx;
                         sq.y += dy;
                     } else {
+                        // si no es la cabeza, asigno posicion del miembro anterior
                         sq.x = controles.bicho[idx-1].x;
                         sq.y = controles.bicho[idx-1].y;
                     }
@@ -77,13 +87,16 @@
                     }
             }
             
-
+            // verifico si atrape algo
             if(atrapado) {
+                // le digo a la serpiente que creza en 1
                 controles.crecimiento += 1; // aca sabemos que la cabeza va a crecer uno
+                // reposicionamos el cuadrado blanco "victima"
                 revictima();
             }
-
+            // pregunto si tengo que crecer
             if (controles.crecimiento > 0) {
+                // agrego a mi bicho el clon de cola creado anteriormente
                 controles.bicho.push(cola); // esto le agrega el objeto vacio con la copia de la cabeza
                 console.log(controles.bicho);
                 controles.crecimiento -= 1; // esto vuelve a 0 para que no siga creciendo
@@ -96,12 +109,21 @@
             setTimeout(looper, INTERVALO);
 
         }
-
+        // detecto choques contra las paredes y contra si misma
         let detectarChoque = () =>{
             // primero comprobamos que la cabeza no choque contra los bordes
             const head = controles.bicho[0];
-            if(head.x < 0 || head.x >= ANCHOALTO/PESO){
+            // pregunto si choca con los bordes o se sale de ellos
+            if(head.x < 0 || head.x >= ANCHOALTO/PESO || head.y >= ANCHOALTO/PESO || head.y < 0){
                 return true;
+            }
+            // detectamos la colision contra nosotros mismos
+            for (let idx = 1; idx < controles.bicho.length; idx++) {
+                const sq = controles.bicho[idx];
+                // si la posicion del "cuerpos" es igual a la posicion de la cabeza, significa que chocamos contra nosotros mismos y se termina el juego
+                if(sq.x === head.x && sq.y === head.y){
+                    return true; // si algun choque pase tiro un true
+                }
             }
         }
 
@@ -119,7 +141,7 @@
         };
         let dibujar = () => {     
             ctx.clearRect(0,0,ANCHOALTO,ANCHOALTO); // con esto cada vez que corre el loop, borramos todo lo que este en el canvas, desde las posiciones 0 y en los tamaños 500, es decir, la totalidad del canvas
-            // instacion cabeza de bicho
+            // recorro todo el bicho
             for (let idx=0; idx < controles.bicho.length; idx++){
                 const {x, y} = controles.bicho[idx];
                 dibujarActores('green', x, y);
@@ -129,6 +151,7 @@
             dibujarActores('white', victima.x, victima.y);
         }
 
+        // dibuja todos los cuatros
         let dibujarActores = (color, x, y) => {
             
             // Indico cual sera el color de dibujo a crear
@@ -136,7 +159,7 @@
             // creo un cuadrado (posicionX, posicionY, Ancho, Alto)
             ctx.fillRect(x*PESO, y*PESO, 10, 10); // aca en los 2 primeros argumentos, le pasamos las posiciones de looper
         }
-
+        // crea posicion y direccion random
         let cualquierLado = () => {
             // con esto lo que hago es convertir a DIRECCION, en un array, y guardarlo en direccion, ya que sino, no podria acceder a los valores y en el random me tiraria error
             let direccion = Object.values(DIRECCION);
@@ -147,7 +170,7 @@
                 d: direccion[parseInt(Math.random()*11/PESO)]
             }
         }
-        
+        // reposicionar a la victima cuando fue capturada
         let revictima = () => {
             // reposiciona a la victima en otro lado
             let nuevaPosicion = cualquierLado();
@@ -155,8 +178,18 @@
             victima.x = nuevaPosicion.x;
             victima.y = nuevaPosicion.y;
         }
-        // cuando el documento carga, llamo a looper
-        window.onload = () => {
+
+        // reiniciamos el juego y sus valores
+        let reiniciarJuego = () => {
+            // reiniciamos los valores de controles a 0
+            controles = {
+                direccion:{x:1, y:0},
+                bicho:[{x:25, y:25}],
+                victima: {x:0, y:250},
+                jugando: false, // vamos a detectar si el juego esta corriento
+                crecimiento: 0 // esto va a chequear si tiene que crecer o no
+            };
+            console.log('reiniciando')
             posiciones = cualquierLado();
             let head = controles.bicho[0]; 
             head.x = posiciones.x;
@@ -169,6 +202,10 @@
             victima.x = posicionVictima.x;
             victima.y = posicionVictima.y;
             controles.jugando = true;
+        }
+        // cuando el documento carga, llamo a looper
+        window.onload = () => {
+            reiniciarJuego();
             looper();
         }
     </script>
