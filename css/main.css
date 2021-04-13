@@ -3,8 +3,41 @@ Main css
 Viborarda ver. 0.0.1
 */
 
+body {
+  font-family: "Press Start 2P", cursive;
+  background: #666;
+  text-align: center;
+  margin: 0;
+}
+
+canvas {
+  border: solid 4px white;
+  background: cornflowerblue;
+  box-shadow: 3px 3px 10px rgb(84, 84, 84);
+}
+
+h2,
+h3 {
+  line-height: 0;
+  margin-right: 20px;
+}
+
 .container {
   display: block;
   align-items: center;
   justify-content: center;
+}
+
+.puntaje {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+div.puntaje:last-of-type {
+  margin-right: 0;
+}
+
+.arrows {
+  margin: 10px 0 0 0;
 }

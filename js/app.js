@@ -1,10 +1,25 @@
 // Botones
-const btnReinicio = document.querySelector("#reiniciarBtn");
-const btnStop = document.querySelector("#stopBtn");
+//const btnReinicio = document.querySelector("#reiniciarBtn");
+//const btnStop = document.querySelector("#stopBtn");
 const btnUp = document.querySelector("#flechaArriba");
 const btnDown = document.querySelector("#flechaAbajo");
 const btnLf = document.querySelector("#flechaIzq");
 const btnRg = document.querySelector("#flechaDer");
+// puntaje y timer
+const puntaje = document.querySelector(".puntos");
+const timer = document.querySelector("#timer");
+
+// timer
+counter = 0;
+
+function timerCount() {
+  setInterval(() => {
+    timer.innerHTML = counter;
+    counter += 1;
+  }, 500);
+}
+
+timerCount();
 
 // eventos de botones
 
@@ -17,7 +32,7 @@ function Listeners() {
   btnStop.addEventListener("click", () => {
     controles.jugando = false;
   });*/
-  btnUp.addEventListener("click", () => {});
+  btnUp.addEventListener("onKeydown", () => {});
 }
 
 // ancho y alto de mi canvas
@@ -59,6 +74,7 @@ let looper = () => {
   const sq = controles.bicho[0];
   // verifico que bicho atrapo a la victima
   let atrapado = sq.x === controles.victima.x && sq.y === controles.victima.y; // aca si esto se cumple, guardamos un true
+  puntaje.innerHTML = controles.bicho.length - 1;
   // detecto si en esta vuelta del loop, hay un choque
   if (detectarChoque()) {
     // si existe este choque, detengo el juego y llamamamos a la funcion reiniciar
@@ -188,6 +204,7 @@ let revictima = () => {
 // reiniciamos el juego y sus valores
 let reiniciarJuego = () => {
   // reiniciamos los valores de controles a 0
+  counter = 0;
   controles = {
     direccion: { x: 1, y: 0 },
     bicho: [{ x: 25, y: 25 }],
