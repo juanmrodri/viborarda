@@ -1,0 +1,10 @@
+/* 
+Main css
+Viborarda ver. 0.0.1
+*/
+
+.container {
+  display: block;
+  align-items: center;
+  justify-content: center;
+}
