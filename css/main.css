@@ -44,4 +44,27 @@ div.puntaje:last-of-type {
 
 .arrows {
   margin: 10px 0 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, 5%);
+  grid-gap: 5px;
+  grid-auto-rows: minmax(10px, auto);
+  justify-content: center;
+  align-items: center;
+}
+
+#flechaIzq {
+  grid-column: 1/2;
+  grid-row: 2;
+}
+#flechaArriba {
+  grid-column: 2/3;
+  grid-row: 1;
+}
+#flechaAbajo {
+  grid-column: 2/3;
+  grid-row: 2;
+}
+#flechaDer {
+  grid-column: 3/4;
+  grid-row: 2;
 }

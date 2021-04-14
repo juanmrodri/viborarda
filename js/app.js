@@ -269,5 +269,5 @@ let reiniciarJuego = () => {
 // cuando el documento carga, llamo a looper
 window.onload = () => {
   reiniciarJuego();
-  looper();
+  //looper();
 };
