@@ -10,12 +10,6 @@ body {
   margin: 0;
 }
 
-canvas {
-  border: solid 4px #656774;
-  background: #8aac0f;
-  box-shadow: 1px 1px 5px #656774;
-}
-
 h2,
 h3 {
   line-height: 0;
@@ -23,23 +17,42 @@ h3 {
 }
 
 .container {
-  display: block;
-  align-items: center;
-  justify-content: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+canvas {
+  border: solid 4px #656774;
+  background: #8aac0f;
+  box-shadow: 1px 1px 5px #656774;
+}
+
+@media only screen and (max-width: 400px) {
+  canvas {
+    width: 250px;
+  }
 }
 
 .puntaje {
   color: #fff;
-}
-
-.puntaje {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 10px;
 }
 
 div.puntaje:last-of-type {
   margin-right: 0;
+}
+
+@media only screen and (max-width: 400px) {
+  .puntaje {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
 }
 
 .arrows {
@@ -50,6 +63,16 @@ div.puntaje:last-of-type {
   grid-auto-rows: minmax(10px, auto);
   justify-content: center;
   align-items: center;
+}
+
+@media only screen and (max-width: 400px) {
+  .arrows {
+    margin-top: 15px;
+    grid-auto-flow: row;
+    grid-gap: 10px;
+    grid-template-columns: repeat(3, 20%);
+    grid-auto-rows: 20px;
+  }
 }
 
 #flechaIzq {

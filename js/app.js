@@ -70,7 +70,7 @@ let looper = () => {
   // detecto si en esta vuelta del loop, hay un choque
   if (detectarChoque()) {
     // si existe este choque, detengo el juego y llamamamos a la funcion reiniciar
-    alert("Gameover");
+    alert("Game over");
     reiniciarJuego();
   }
   // referencio la direccion actual
