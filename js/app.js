@@ -25,15 +25,7 @@ timerCount();
 
 Listeners();
 
-function Listeners() {
-  /*btnReinicio.addEventListener("click", () => {
-    reiniciarJuego();
-  });
-  btnStop.addEventListener("click", () => {
-    controles.jugando = false;
-  });*/
-  btnUp.addEventListener("onKeydown", () => {});
-}
+// listeners declarado abajo de el onkeydown
 
 // ancho y alto de mi canvas
 const ANCHOALTO = 500;
@@ -74,10 +66,11 @@ let looper = () => {
   const sq = controles.bicho[0];
   // verifico que bicho atrapo a la victima
   let atrapado = sq.x === controles.victima.x && sq.y === controles.victima.y; // aca si esto se cumple, guardamos un true
-  puntaje.innerHTML = controles.bicho.length - 1;
+  puntaje.innerHTML = controles.bicho.length - 1; // esto muestra el puntaje
   // detecto si en esta vuelta del loop, hay un choque
   if (detectarChoque()) {
     // si existe este choque, detengo el juego y llamamamos a la funcion reiniciar
+    alert("Gameover");
     reiniciarJuego();
   }
   // referencio la direccion actual
@@ -152,6 +145,10 @@ let detectarChoque = () => {
 
 document.onkeydown = (e) => {
   // guardo en teclaApretada la nueva direccion
+  console.log(e);
+  if (e.code === "Numpad7") {
+    controles.crecimiento += 2;
+  }
   teclaApretada = DIRECCION[e.code];
   // deconstruyo x y de teclaApretada
   const [x, y] = teclaApretada; // lo que esta en la pos 0 se guardara en x e y
@@ -162,16 +159,60 @@ document.onkeydown = (e) => {
     controles.direccion.y = y; // aca establecemos que la tecla apretada indicara la direccion final
   }
 };
+
+function Listeners() {
+  btnUp.addEventListener("click", () => {
+    let flechaArriba = DIRECCION.ArrowUp;
+    const [x, y] = flechaArriba; // lo que esta en la pos 0 se guardara en x e y
+    if (-x !== controles.direccion.x && -y !== controles.direccion.y) {
+      // con esta simple linea logramos que no se pueda ir en la direccion opuesta a la que estamos yendo, porque la viborita no se puede pisar, entonces si ambas direcciones en negativo, son distintas a las direcciones, nos deja mover al bicho, sino, no pasa nada, ya que se entiende que queremos ir para "atras" y eso no se puede
+      // asigno las direcciones a mis controles
+      controles.direccion.x = x; // aca establecemos que la tecla apretada indicara la direccion final
+      controles.direccion.y = y; // aca establecemos que la tecla apretada indicara la direccion final
+    }
+  });
+  btnDown.addEventListener("click", () => {
+    let flechaAbajo = DIRECCION.ArrowDown;
+    const [x, y] = flechaAbajo; // lo que esta en la pos 0 se guardara en x e y
+    if (-x !== controles.direccion.x && -y !== controles.direccion.y) {
+      // con esta simple linea logramos que no se pueda ir en la direccion opuesta a la que estamos yendo, porque la viborita no se puede pisar, entonces si ambas direcciones en negativo, son distintas a las direcciones, nos deja mover al bicho, sino, no pasa nada, ya que se entiende que queremos ir para "atras" y eso no se puede
+      // asigno las direcciones a mis controles
+      controles.direccion.x = x; // aca establecemos que la tecla apretada indicara la direccion final
+      controles.direccion.y = y; // aca establecemos que la tecla apretada indicara la direccion final
+    }
+  });
+  btnLf.addEventListener("click", () => {
+    let flechaIzq = DIRECCION.ArrowLeft;
+    const [x, y] = flechaIzq; // lo que esta en la pos 0 se guardara en x e y
+    if (-x !== controles.direccion.x && -y !== controles.direccion.y) {
+      // con esta simple linea logramos que no se pueda ir en la direccion opuesta a la que estamos yendo, porque la viborita no se puede pisar, entonces si ambas direcciones en negativo, son distintas a las direcciones, nos deja mover al bicho, sino, no pasa nada, ya que se entiende que queremos ir para "atras" y eso no se puede
+      // asigno las direcciones a mis controles
+      controles.direccion.x = x; // aca establecemos que la tecla apretada indicara la direccion final
+      controles.direccion.y = y; // aca establecemos que la tecla apretada indicara la direccion final
+    }
+  });
+  btnRg.addEventListener("click", () => {
+    let flechaDer = DIRECCION.ArrowRight;
+    const [x, y] = flechaDer; // lo que esta en la pos 0 se guardara en x e y
+    if (-x !== controles.direccion.x && -y !== controles.direccion.y) {
+      // con esta simple linea logramos que no se pueda ir en la direccion opuesta a la que estamos yendo, porque la viborita no se puede pisar, entonces si ambas direcciones en negativo, son distintas a las direcciones, nos deja mover al bicho, sino, no pasa nada, ya que se entiende que queremos ir para "atras" y eso no se puede
+      // asigno las direcciones a mis controles
+      controles.direccion.x = x; // aca establecemos que la tecla apretada indicara la direccion final
+      controles.direccion.y = y; // aca establecemos que la tecla apretada indicara la direccion final
+    }
+  });
+}
+
 let dibujar = () => {
   ctx.clearRect(0, 0, ANCHOALTO, ANCHOALTO); // con esto cada vez que corre el loop, borramos todo lo que este en el canvas, desde las posiciones 0 y en los tamaños 500, es decir, la totalidad del canvas
   // recorro todo el bicho
   for (let idx = 0; idx < controles.bicho.length; idx++) {
     const { x, y } = controles.bicho[idx];
-    dibujarActores("green", x, y);
+    dibujarActores("#0F3711", x, y);
   }
   // *ahora esto está en el for* const sq = controles.bicho[0]; // con esto sabemos la posicion de la cabeza del bicho, para ubicarnos en el canvas, y para poder redibujar el cuadrado
   const victima = controles.victima; // no le paso posicion porque es un objeto que tiene 2 elementos
-  dibujarActores("white", victima.x, victima.y);
+  dibujarActores("#0F3711", victima.x, victima.y);
 };
 
 // dibuja todos los cuatros

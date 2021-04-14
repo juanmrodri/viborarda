@@ -5,15 +5,15 @@ Viborarda ver. 0.0.1
 
 body {
   font-family: "Press Start 2P", cursive;
-  background: #666;
+  background: #000;
   text-align: center;
   margin: 0;
 }
 
 canvas {
-  border: solid 4px white;
-  background: cornflowerblue;
-  box-shadow: 3px 3px 10px rgb(84, 84, 84);
+  border: solid 4px #656774;
+  background: #8aac0f;
+  box-shadow: 1px 1px 5px #656774;
 }
 
 h2,
@@ -26,6 +26,10 @@ h3 {
   display: block;
   align-items: center;
   justify-content: center;
+}
+
+.puntaje {
+  color: #fff;
 }
 
 .puntaje {
