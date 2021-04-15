@@ -208,11 +208,11 @@ let dibujar = () => {
   // recorro todo el bicho
   for (let idx = 0; idx < controles.bicho.length; idx++) {
     const { x, y } = controles.bicho[idx];
-    dibujarActores("#0F3711", x, y);
+    dibujarActores("#181813", x, y);
   }
   // *ahora esto está en el for* const sq = controles.bicho[0]; // con esto sabemos la posicion de la cabeza del bicho, para ubicarnos en el canvas, y para poder redibujar el cuadrado
   const victima = controles.victima; // no le paso posicion porque es un objeto que tiene 2 elementos
-  dibujarActores("#0F3711", victima.x, victima.y);
+  dibujarActores("#181813", victima.x, victima.y);
 };
 
 // dibuja todos los cuatros

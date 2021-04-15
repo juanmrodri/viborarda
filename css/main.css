@@ -3,6 +3,55 @@ Main css
 Viborarda ver. 0.0.1
 */
 
+/* colores y eso */
+
+.gf {
+  color: #181813;
+}
+
+.bf {
+  color: #000;
+}
+
+.nokier {
+  background-color: #95a984;
+  color: #656774;
+}
+
+.bolder {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.mini {
+  font-size: 10px;
+}
+
+/*****/
+
+/* Standars */
+
+a,
+a:active {
+  color: #181813;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #36362c;
+}
+
+header {
+  line-height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/*****/
+
 body {
   font-family: "Press Start 2P", cursive;
   background: #000;
@@ -22,9 +71,9 @@ h3 {
 }
 
 canvas {
-  border: solid 4px #656774;
-  background: #8aac0f;
-  box-shadow: 1px 1px 5px #656774;
+  border: solid 4px #181813;
+  background: #95a984;
+  box-shadow: 1px 1px 5px #181813;
 }
 
 @media only screen and (max-width: 400px) {
@@ -34,7 +83,7 @@ canvas {
 }
 
 .puntaje {
-  color: #fff;
+  color: #95a984;
   display: flex;
   align-items: center;
   justify-content: center;
