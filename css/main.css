@@ -96,7 +96,6 @@ div.puntaje:last-of-type {
 
 @media only screen and (max-width: 400px) {
   .puntaje {
-    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
